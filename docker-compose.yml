@@ -1,0 +1,28 @@
+services:
+  web:
+    build: .
+    command: python -u app.py
+    ports:
+      - "5000:5000"
+    depends_on:
+      - mongo
+    volumes:
+      - .:/app
+    links:
+      - mongo  
+  mongo:
+    image: mongo:latest
+    container_name: mongodb
+    hostname: test_mongodb
+    ports:
+      - "27017:27017"
+    volumes:
+      - mongo_data:/data/db
+      - ./init_db.js:/docker-entrypoint-initdb.d/init-db.js:ro
+    environment:
+      MONGO_INITDB_ROOT_USERNAME: root
+      MONGO_INITDB_ROOT_PASSWORD: pass
+      MONGO_INITDB_DATABASE: animal_db
+
+volumes:
+  mongo_data:
